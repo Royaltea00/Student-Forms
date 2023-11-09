@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from main_app.app_forms import StudentForm
@@ -20,7 +21,7 @@ def students(request):
 
 
 def show_students(request):
-    # data = Student.objects.all()     # SELECT * FROM students
+    data = Student.objects.all()     # SELECT * FROM students
     # data = Student.objects.all().order_by('-kcpe_score') # lists students acc to kcpe in descending order
     # data= Student.objects.filter(first_name='Gran') # case sensitive
     # data= Student.objects.filter(first_name__startswith='Rob') # case insensitive
@@ -28,10 +29,11 @@ def show_students(request):
     # data= Student.objects.filter(first_name__icontains='Rob', last_name__icontains='sh') # AND
     # data= Student.objects.filter(first_name__icontains='Rob') | Student.objects.filter(last_name__icontains='ht') # OR
     # data = Student.objects.filter(dob__year= 2000, dob__month=12) #only those born in Dec 2000
-    today= datetime.today()
-    mon = today.month
-    day = today.day
-    data =Student.objects.filter(dob__month=mon, dob__day=day)
+
+    # today= datetime.today()
+    # mon = today.month
+    # day = today.day
+    # data =Student.objects.filter(dob__month=mon, dob__day=day)
     return render(request,'display.html', {"students": data})
 
 
@@ -45,3 +47,9 @@ def delete_student(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
     student.delete()
     return redirect("show")
+
+
+def students_search(request):
+    search = request.GET["search"]
+    data = Student.objects.filter(Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains=search))
+    return render(request,'display.html', {"students": data})
