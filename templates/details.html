@@ -24,6 +24,9 @@
         <p>Scored {{ student.kcpe_score }} in KCPE</p>
 {#        <p>{{ 1000000 | intcomma }}</p>#}
 {#        <p>{{ 1000000 | intword }}</p>#}
+
+            <a href="{% url 'delete' student.id %}" class="btn btn-danger">Delete</a>
+{#  student/delete/1 #}
         </div>
     </div>
 </div>
