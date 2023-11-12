@@ -9,6 +9,7 @@ Details for {{ student.first_name | capfirst}}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-sm-6 text-center">
+            {% include "alert.html" %}
             {% if student.profile_pic %}
                 <img src="{{ student.profile_pic.url }}" class="img-fluid" alt="">
             {% endif %}
@@ -17,11 +18,11 @@ Details for {{ student.first_name | capfirst}}
         <p>DOB is {{ student.dob | date:'d/m/Y' }}</p>
         <p>Added {{ student.created_at | naturaltime }}</p>
         <p>Scored {{ student.kcpe_score }} in KCPE</p>
-{#        <p>{{ 1000000 | intcomma }}</p>#}
-{#        <p>{{ 1000000 | intword }}</p>#}
 
-            <a href="{% url 'delete' student.id %}" class="btn btn-danger">Delete</a>
-{#  student/delete/1 #}
+            <a href="{% url 'delete' student.id %}" class="btn btn-danger w-50">Delete</a> {#  student/delete/1 #}
+
+            <a href="{% url 'update' student.id %}" class="btn btn-dark mt-2 w-50">Update</a>
+
         </div>
     </div>
 </div>

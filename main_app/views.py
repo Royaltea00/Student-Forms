@@ -57,7 +57,7 @@ def show_details(request, id):
 
 def delete_student(request, student_id):
     # get student from db
-    student = get_object_or_404(Student, pk=student_id)
+    student = get_object_or_404(Student, pk=student_id) # SELECT * FROM students WHERE id=1
     student.delete()
     messages.info(request, f"Student {student.first_name}{student.last_name} was deleted successfully")
     return redirect("show")
@@ -76,3 +76,17 @@ def students_search(request):
     page_number = request.GET.get("page")
     data = paginator.get_page(page_number)
     return render(request, 'display.html', {"students": data})
+
+
+def update_student(request, student_id):
+    # get student from db
+    student = get_object_or_404(Student, pk=student_id) # SELECT * FROM students WHERE id=1
+    if request.method == "POST":
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Successfully updated student {student.first_name}")
+            return redirect("details", student_id)
+    else:
+        form = StudentForm(instance=student)
+    return render(request, "update.html", {"form": form})

@@ -27,6 +27,7 @@ urlpatterns = [
     path('search', views.students_search, name="search"),
     path('details/<int:id>.', views.show_details, name="details"),
     path('students/delete/<int:student_id>', views.delete_student, name="delete"),
+    path('students/update/<int:student_id>', views.update_student, name="update"),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
