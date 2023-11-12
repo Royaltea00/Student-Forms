@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.contrib import messages
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -130,3 +132,11 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # python manage.py populate
+
+MESSAGE_TAGS = {
+    messages.ERROR: "alert-danger",
+    messages.INFO: "alert-info",
+    messages.WARNING: "alert-warning",
+    messages.DEBUG: "alert-dark",
+    messages.SUCCESS: "alert-success"
+}

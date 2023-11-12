@@ -16,9 +16,9 @@ def students(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Student saved successfully")
-            messages.error(request, 'Error while saving Student')
-            messages.warning(request, "This action is irreversible")
-            messages.info(request, "Tomorrow might be a holiday. Check your calendar")
+            # messages.error(request, 'Error while saving Student')
+            # messages.warning(request, "This action is irreversible")
+            # messages.info(request, "Tomorrow might be a holiday. Check your calendar")
             return redirect("home")
     else:
         form = StudentForm()
@@ -27,7 +27,7 @@ def students(request):
 
 
 def show_students(request):
-    data = Student.objects.all()     # SELECT * FROM students
+    data = Student.objects.all()  # SELECT * FROM students
     # data = Student.objects.all().order_by('-kcpe_score') # lists students acc to kcpe in descending order
     # data= Student.objects.filter(first_name='Gran') # case-sensitive
     # data= Student.objects.filter(first_name__startswith='Rob') # case-insensitive
@@ -44,12 +44,14 @@ def show_students(request):
     page_number = request.GET.get("page")
     data = paginator.get_page(page_number)
 
-    return render(request,'display.html', {"students": data})
+    return render(request, 'display.html', {"students": data})
+
+
 # show?page=1
 
 
-def show_details(request, student_id):
-    student = Student.objects.get(pk=student_id) # SELECT * FROM students WHERE id=1
+def show_details(request, id):
+    student = Student.objects.get(pk=id)  # SELECT * FROM students WHERE id=1
     return render(request, 'details.html', {'student': student})
 
 
@@ -57,12 +59,14 @@ def delete_student(request, student_id):
     # get student from db
     student = get_object_or_404(Student, pk=student_id)
     student.delete()
+    messages.info(request, f"Student {student.first_name}{student.last_name} was deleted successfully")
     return redirect("show")
 
 
 def students_search(request):
     search = request.GET["search"]
-    data = Student.objects.filter(Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains=search))
+    data = Student.objects.filter(
+        Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains=search))
 
     if search.isnumeric():
         score = int(search)
@@ -71,4 +75,4 @@ def students_search(request):
     paginator = Paginator(data, 50)
     page_number = request.GET.get("page")
     data = paginator.get_page(page_number)
-    return render(request,'display.html', {"students": data})
+    return render(request, 'display.html', {"students": data})
