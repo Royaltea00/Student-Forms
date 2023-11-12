@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
@@ -14,6 +15,10 @@ def students(request):
         form = StudentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request, "Student saved successfully")
+            messages.error(request, 'Error while saving Student')
+            messages.warning(request, "This action is irreversible")
+            messages.info(request, "Tomorrow might be a holiday. Check your calendar")
             return redirect("home")
     else:
         form = StudentForm()

@@ -3,9 +3,11 @@
 
 {% block content %}
     {% include 'navbar.html' %}
+
 <div class="container">
     <div class="row">
         <div class="col-sm-5">
+            {% include 'alert.html' %}
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form | crispy }}
@@ -15,7 +17,8 @@
     </div>
 </div>
 {% endblock %}
+
 {% block title %}
-All Students
+    Register Student
 {% endblock %}
 
