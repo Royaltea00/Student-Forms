@@ -23,6 +23,8 @@ from project_data import settings
 
 urlpatterns = [
     path('', views.students, name = "home"),
+    path('login', views.signin, name = "login"),
+    path('logout', views.signout, name = "logout"),
     path('show', views.show_students, name="show"),
     path('search', views.students_search, name="search"),
     path('details/<int:id>.', views.show_details, name="details"),

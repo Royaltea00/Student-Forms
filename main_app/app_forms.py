@@ -14,3 +14,6 @@ class StudentForm(forms.ModelForm):
 
 
 # how to add radio field in django model form
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=50)
+    password  = forms.CharField(max_length=50, widget=forms.PasswordInput)

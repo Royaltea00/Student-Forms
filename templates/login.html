@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+	SignIn
+{% endblock %}
+
+{% block content %}
+	<div class="vh-100">
+    <div class="row justify-content-center">
+        <div class="cl-sm-4">
+            <form action=" "method ="post" class="shadow px-3 py-4">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button class="btn btn-dark rounded-0 w-100" >Sign In</button>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}

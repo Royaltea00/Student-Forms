@@ -1,11 +1,12 @@
 from datetime import datetime
 
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
-from main_app.app_forms import StudentForm
+from main_app.app_forms import StudentForm, LoginForm
 from main_app.models import Student
 
 
@@ -57,7 +58,7 @@ def show_details(request, id):
 
 def delete_student(request, student_id):
     # get student from db
-    student = get_object_or_404(Student, pk=student_id) # SELECT * FROM students WHERE id=1
+    student = get_object_or_404(Student, pk=student_id)  # SELECT * FROM students WHERE id=1
     student.delete()
     messages.info(request, f"Student {student.first_name}{student.last_name} was deleted successfully")
     return redirect("show")
@@ -80,7 +81,7 @@ def students_search(request):
 
 def update_student(request, student_id):
     # get student from db
-    student = get_object_or_404(Student, pk=student_id) # SELECT * FROM students WHERE id=1
+    student = get_object_or_404(Student, pk=student_id)  # SELECT * FROM students WHERE id=1
     if request.method == "POST":
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
@@ -90,3 +91,26 @@ def update_student(request, student_id):
     else:
         form = StudentForm(instance=student)
     return render(request, "update.html", {"form": form})
+
+
+def signin(request):
+    if request.method == "GET":
+        form = LoginForm()
+        return render(request, 'login.html', {"form": form})
+    elif request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                messages.success(request, 'Signed in successfully')
+                return redirect('home')
+        messages.error(request, "Invalid username or password")
+        return render(request, 'login.html', {"form": form})
+
+
+
+def signout(request):
+    return None
