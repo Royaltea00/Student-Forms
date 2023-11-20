@@ -1,7 +1,6 @@
-from datetime import datetime
-
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,6 +10,8 @@ from main_app.models import Student
 
 
 # Create your views here.
+@login_required  # decorators
+@permission_required('main_app.add_student')
 def students(request):
     if request.method == "POST":
         form = StudentForm(request.POST, request.FILES)
@@ -27,6 +28,8 @@ def students(request):
     return render(request, 'students.html', {"form": form})
 
 
+@login_required
+@permission_required('main_app.view_student')
 def show_students(request):
     data = Student.objects.all()  # SELECT * FROM students
     # data = Student.objects.all().order_by('-kcpe_score') # lists students acc to kcpe in descending order
@@ -50,12 +53,14 @@ def show_students(request):
 
 # show?page=1
 
-
+@login_required
 def show_details(request, id):
     student = Student.objects.get(pk=id)  # SELECT * FROM students WHERE id=1
     return render(request, 'details.html', {'student': student})
 
 
+@login_required
+@permission_required('main_app.delete_student')  # <app_name>.<action>_<model>
 def delete_student(request, student_id):
     # get student from db
     student = get_object_or_404(Student, pk=student_id)  # SELECT * FROM students WHERE id=1
@@ -64,6 +69,7 @@ def delete_student(request, student_id):
     return redirect("show")
 
 
+@login_required
 def students_search(request):
     search = request.GET["search"]
     data = Student.objects.filter(
@@ -79,6 +85,7 @@ def students_search(request):
     return render(request, 'display.html', {"students": data})
 
 
+@login_required
 def update_student(request, student_id):
     # get student from db
     student = get_object_or_404(Student, pk=student_id)  # SELECT * FROM students WHERE id=1
@@ -111,6 +118,14 @@ def signin(request):
         return render(request, 'login.html', {"form": form})
 
 
-
 def signout(request):
-    return None
+    logout(request) # kill all cookies
+    return redirect('login')
+
+# redis db
+
+# editor user 123456 Edit See Delete --All powers
+# teacher user 123456 See Edit
+# hr user 123456 See
+
+# Groups editor-group | teachers-group | hr-group
